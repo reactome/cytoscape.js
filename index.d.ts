@@ -1418,6 +1418,36 @@ declare namespace cytoscape {
 
     interface ExportJpgBlobPromiseOptions extends ExportJpgOptions, ExportBlobPromiseOptions {}
 
+    interface ExportSvgOptions {
+        /**
+         * Whether to export the current viewport (false, default) or the whole
+         * graph (true).
+         */
+        full?: boolean;
+        /**
+         * Scale the exported dimensions. Ignored if maxWidth or maxHeight is set.
+         */
+        scale?: number;
+        /**
+         * Cap the exported width, scaling down to fit.
+         */
+        maxWidth?: number;
+        /**
+         * Cap the exported height, scaling down to fit.
+         */
+        maxHeight?: number;
+        /**
+         * Background colour. Omit for a transparent background.
+         */
+        bg?: string;
+        /**
+         * Inline node background images as data URIs (default true). With false
+         * they are referenced by URL, which keeps the file small but leaves it
+         * dependent on those URLs remaining reachable.
+         */
+        embedImages?: boolean;
+    }
+
     interface CoreExport {
         /**
          * Export the current graph view as a PNG image in Base64 representation.
@@ -1439,6 +1469,14 @@ declare namespace cytoscape {
         jpeg(options?: ExportJpgStringOptions): string;
         jpeg(options?: ExportJpgBlobOptions): Blob;
         jpeg(options?: ExportJpgBlobPromiseOptions): Promise<Blob>;
+
+        /**
+         * Export the current graph view as an SVG document.
+         *
+         * Unlike png()/jpg() there is no raster to size, so the result is
+         * resolution independent and its text stays selectable.
+         */
+        svg(options?: ExportSvgOptions): string;
 
         /**
          * Export the graph as JSON, the same format used at initialisation.

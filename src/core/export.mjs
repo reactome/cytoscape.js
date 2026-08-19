@@ -14,6 +14,13 @@ let corefn = ({
     options.bg = options.bg || '#fff';
 
     return renderer.jpg( options );
+  },
+
+  svg: function( options ){
+    let renderer = this._private.renderer;
+    options = options || {};
+
+    return renderer.svg( options );
   }
 
 });

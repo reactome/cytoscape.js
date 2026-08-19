@@ -23,6 +23,7 @@ import drawingRedraw from './drawing-redraw.mjs';
 import drawingRedrawWebGL from './webgl/drawing-redraw-webgl.mjs';
 import drawingShapes from './drawing-shapes.mjs';
 import exportImage from './export-image.mjs';
+import exportSvg from './export-svg.mjs';
 import nodeShapes from './node-shapes.mjs';
 
 var CR = CanvasRenderer;
@@ -383,6 +384,7 @@ CRp.makeOffscreenCanvas = function(width, height){
   drawingRedrawWebGL,
   drawingShapes,
   exportImage,
+  exportSvg,
   nodeShapes
 ].forEach( function( props ){
   util.extend( CRp, props );
