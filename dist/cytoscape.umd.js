@@ -22884,6 +22884,12 @@ var printLayoutInfo;
       },
       spacing: function spacing(edge) {
         return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
+      },
+      // The circle is centred one radius from the node, so its far side is a diameter
+      // away. The standard gap (twice the line's width) ends the line inside the circle,
+      // which a hollow circle shows: the line runs past its centre.
+      gap: function gap(edge) {
+        return 2 * this.spacing(edge);
       }
     });
     defineArrowShape('tee', {
