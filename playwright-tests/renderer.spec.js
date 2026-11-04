@@ -675,4 +675,51 @@ test.describe('Renderer', () => {
 
   }); // with layout
 
+  test.describe('circle arrow', () => {
+
+    // A hollow circle shows the line inside it: the line must end at the circle's far
+    // side, not run on towards its centre.
+    for (const side of ['target', 'source']) {
+      test(`the line ends outside a hollow ${side} circle`, async ({ page }) => {
+        const result = await page.evaluate((side) => {
+          const cy = window.cy;
+
+          cy.style().fromJson([
+            {
+              selector: 'edge',
+              style: {
+                'width': 4,
+                'arrow-scale': 1.5,
+                'curve-style': 'straight',
+                [`${side}-arrow-shape`]: 'circle',
+                [`${side}-arrow-fill`]: 'hollow'
+              }
+            }
+          ]).update();
+
+          cy.add([
+            { data: { id: 'a' }, position: { x: 0, y: 0 } },
+            { data: { id: 'b' }, position: { x: 300, y: 0 } },
+            { data: { id: 'ab', source: 'a', target: 'b' } }
+          ]);
+
+          const edge = cy.$('#ab');
+          edge.targetEndpoint(); // computes the edge's geometry
+          const rs = edge[0]._private.rscratch;
+          const r = cy.renderer();
+          const radius = r.getArrowWidth(4, 1.5) * r.arrowShapes.circle.radius;
+          const centre = side === 'target'
+            ? { x: rs.arrowEndX, y: rs.arrowEndY }
+            : { x: rs.arrowStartX, y: rs.arrowStartY };
+          const lineEnd = side === 'target' ? { x: rs.endX, y: rs.endY } : { x: rs.startX, y: rs.startY };
+
+          return { radius, fromCentre: Math.hypot(lineEnd.x - centre.x, lineEnd.y - centre.y) };
+        }, side);
+
+        expect(result.fromCentre).toBeGreaterThanOrEqual(result.radius - 0.001);
+      });
+    }
+
+  }); // circle arrow
+
 }); // renderer
